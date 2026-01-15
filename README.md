@@ -17,7 +17,7 @@ pip install -r requirements.txt
 The data file can be found [here](https://drive.google.com/file/d/1TdiPQuChbyrh9JzIoBvRGpuknzoWLXFg/view?usp=drive_link).
 The ckpt can be found [here](https://drive.google.com/file/d/1a_Dk09y2GhtZvlXo3c4TjSxf_WI-SdwS/view?usp=drive_link).
 
-## Train 3D
+## Train AIONg
 ```bash
 python main.py \
     --title AIONg\
@@ -42,26 +42,7 @@ python main.py \
     --add_collision_reward True
 ```
 
-## Evaluation
-
-#### Evaluate Trained Model
-```bash
-python main.py \
-    --eval \
-    --test_or_val test \
-    --episode_type NavTestEpisode \
-    --load_model ckpt/AION.dat \
-    --model DinoAttDet \
-    --results_json 3D.json \
-    --gpu_ids 0 \
-    --vis True \
-    --save_model_dir trained_models \
-    --snapToGrid False \
-    --save_visuals True \
-    --save_episode_data True
-```
-
-Train 3D with baseline model [ZSON, BaseModel, GCN, MJO]:
+## Train Baselines [ZSON, BaseModel, GCN, MJO]:
 ```bash
 python main.py \
     --title ZSON \
@@ -76,6 +57,27 @@ python main.py \
     --rollout_steps 128 \
     --split 18/4 \
     --add_stats True
+```
+
+## Evaluation
+
+#### Evaluate Trained Model
+```bash
+python main.py \
+    --eval \
+    --test_or_val test \
+    --episode_type NavTestEpisode \
+    --load_model ckpt/AION-g-18-4.dat \
+    --model AIONg \
+    --results_json 3D.json \
+    --gpu_ids 0 \
+    --vis False \
+    --get_seen_data False \
+    --save_model_dir trained_models \
+    --snapToGrid False \
+    --split 18/4 \
+    --save_visuals True \
+    --save_episode_data True
 ```
 
 #### Train Exploration Model
