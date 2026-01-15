@@ -50,7 +50,7 @@ python main.py \
     --eval \
     --test_or_val test \
     --episode_type NavTestEpisode \
-    --load_model trained_models/baseline.dat \
+    --load_model ckpt/AION.dat \
     --model DinoAttDet \
     --results_json 3D.json \
     --gpu_ids 0 \
