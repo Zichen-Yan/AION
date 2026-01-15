@@ -15,7 +15,10 @@ pip install -r requirements.txt
 ```
 ## Data
 The data file can be found [here](https://drive.google.com/file/d/1TdiPQuChbyrh9JzIoBvRGpuknzoWLXFg/view?usp=drive_link).
-The ckpt can be found [here](https://drive.google.com/file/d/1a_Dk09y2GhtZvlXo3c4TjSxf_WI-SdwS/view?usp=drive_link).
+
+The ckpt can be found [here](https://drive.google.com/file/d/1a_Dk09y2GhtZvlXo3c4TjSxf_WI-SdwS/view?usp=drive_link). 
+
+data/ and ckpt/ should be put in the root dir.
 
 ## Train AIONg
 ```bash
