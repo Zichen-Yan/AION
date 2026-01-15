@@ -20,7 +20,8 @@ The ckpt can be found [here](https://drive.google.com/file/d/1a_Dk09y2GhtZvlXo3c
 
 data/ and ckpt/ should be put in the root dir.
 
-## Train AIONg
+## Train Goal-Reaching 
+####AIONg
 ```bash
 python main.py \
     --title AIONg\
@@ -44,8 +45,8 @@ python main.py \
     --add_parent_reward True\
     --add_collision_reward True
 ```
-
-## Train Baselines [ZSON, BaseModel, GCN, MJO]:
+ 
+####[ZSON, BaseModel, GCN, MJO]:
 ```bash
 python main.py \
     --title ZSON \
@@ -62,9 +63,9 @@ python main.py \
     --add_stats True
 ```
 
-## Evaluation
+## Evaluate Goal-Reaching 
 
-#### Evaluate Trained Model
+#### AIONg
 ```bash
 python main.py \
     --eval \
@@ -76,14 +77,32 @@ python main.py \
     --gpu_ids 0 \
     --vis False \
     --get_seen_data False \
-    --save_model_dir trained_models \
     --snapToGrid False \
     --split 18/4 \
     --save_visuals True \
     --save_episode_data True
 ```
 
-#### Train Exploration Model
+#### [ZSON, BaseModel, GCN, MJO]
+```bash
+python main.py \
+    --eval \
+    --test_or_val test \
+    --episode_type NavTestEpisode \
+    --load_model ckpt/ZSON.dat \
+    --model ZSON \
+    --results_json 3D.json \
+    --gpu_ids 0 \
+    --vis False \
+    --get_seen_data False \
+    --snapToGrid False \
+    --split 18/4 \
+    --save_visuals True \
+    --save_episode_data True
+```
+
+## Train Exploration
+####AIONe
 ```bash
 python main.py \
     --title AIONe \
