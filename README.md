@@ -21,7 +21,7 @@ The ckpt can be found [here](https://drive.google.com/file/d/1a_Dk09y2GhtZvlXo3c
 data/ and ckpt/ should be put in the root dir.
 
 ## Train Goal-Reaching 
-####AIONg
+#### AIONg
 ```bash
 python main.py \
     --title AIONg\
@@ -46,7 +46,7 @@ python main.py \
     --add_collision_reward True
 ```
  
-####[ZSON, BaseModel, GCN, MJO]:
+#### [ZSON, BaseModel, GCN, MJO]:
 ```bash
 python main.py \
     --title ZSON \
@@ -63,7 +63,7 @@ python main.py \
     --add_stats True
 ```
 
-## Evaluate Goal-Reaching 
+## Evaluate Goal-Reaching
 
 #### AIONg
 ```bash
@@ -102,7 +102,7 @@ python main.py \
 ```
 
 ## Train Exploration
-####AIONe
+#### AIONe
 ```bash
 python main.py \
     --title AIONe \
