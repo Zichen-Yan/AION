@@ -7,11 +7,8 @@ conda activate aion
 ```
 2.
 ```
-pip install git+https://github.com/openai/CLIP.git
-```
-3. 
-```
 pip install -r requirements.txt
+pip install git+https://github.com/openai/CLIP.git
 ```
 ## Data
 The data file can be found [here](https://drive.google.com/file/d/1TdiPQuChbyrh9JzIoBvRGpuknzoWLXFg/view?usp=drive_link).

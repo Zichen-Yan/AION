@@ -1,3 +1,4 @@
+psutil
 ai2thor
 certifi
 chardet
