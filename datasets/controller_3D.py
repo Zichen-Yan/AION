@@ -69,8 +69,7 @@ class OfflineControllerWithSmallRotation(BaseController):
         self,
         args,
         grid_file_name="grid.json",
-        metadata_file_name="visible_object_map.json",
-        actions=["MoveAhead", "RotateLeft", "RotateRight", "LookUp", "LookDown"],
+        metadata_file_name="visible_object_map.json"
     ):
         super(OfflineControllerWithSmallRotation, self).__init__()
         self.args = args
@@ -81,7 +80,7 @@ class OfflineControllerWithSmallRotation(BaseController):
         self.metadata_file_name = metadata_file_name
         self.grid = None
         self.metadata = None
-        self.actions = actions
+        self.actions = None
         self.y = None
         self.last_event = None
         while True:

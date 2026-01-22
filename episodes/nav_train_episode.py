@@ -1,4 +1,3 @@
-""" Contains the Episodes for Navigation. """
 import random
 import torch
 
@@ -64,8 +63,8 @@ class NavTrainEpisode(Episode):
         else:
             self.done_count += 1
 
-        movement_actions = ["MoveAhead", "forward", "up", "down"] 
-        if action["action"] in movement_actions: #  and not self.environment.controller.collision
+        movement_actions = ["forward", "up", "down"]
+        if action["action"] in movement_actions:
             self.move_steps += 1
 
         horizon = round(self.environment.last_event.metadata['agent']['cameraHorizon'])
@@ -152,9 +151,7 @@ class NavTrainEpisode(Episode):
     @target_object_index.setter
     def target_object_index(self, target_object_index):
         """ Set the target object by specifying the index. """
-        self._target_object_index = gpuify(
-            torch.LongTensor([target_object_index]), self.gpu_id
-        )
+        self._target_object_index = gpuify(torch.LongTensor([target_object_index]), self.gpu_id)
 
     def get_partial_reward(self):
         """ get partial reward if parent object is seen for the first time"""
@@ -173,11 +170,9 @@ class NavTrainEpisode(Episode):
             self.seen_list.append(k[v.index(reward)])
         return reward
 
-    def _new_episode(
-        self, args, scenes, possible_targets, targets=None, room = None
-    ):
+    def _new_episode(self, args, scenes, possible_targets, targets=None, room = None):
         """ New navigation episode. """
-        if "FloorPlan212" in scenes:
+        if "FloorPlan212" in scenes: # camera issue in this scene
             scenes.remove("FloorPlan212")
         scene = random.choice(scenes)
         self.room = room

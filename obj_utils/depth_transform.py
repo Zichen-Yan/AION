@@ -1,6 +1,5 @@
 import yaml
 from typing import Dict, Any
-import matplotlib.pyplot as plt
 import numpy as np
 import cv2
 
@@ -16,8 +15,8 @@ class Config:
         }
 
         self.transform_cfg = transform_cfg or {
-            "rotate_points": [['x', -30]],  # 旋转30°
-            "filter_points": [['y', -0.25, 0.25]],  # 过滤 Y 轴范围
+            "rotate_points": [['x', -30]],  # rotation
+            "filter_points": [['y', -0.25, 0.25]],
         }
 
         self.projection_cfg = projection_cfg or {
@@ -25,13 +24,12 @@ class Config:
             "map_size": 100,
         }
         self.laserscan_cfg = laserscan_cfg or {
-            "n_intervals": 30,  # 深度扫描的区间数
-            "default_value": 3,  # 空区间的默认值
+            "n_intervals": 30,
+            "default_value": 3,
         }
 
     @classmethod
     def from_yaml(cls, yaml_path: str):
-        """ 从 YAML 文件加载配置 """
         with open(yaml_path, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f)
 
@@ -94,7 +92,7 @@ def rotate_points(points, rotates=None):
                     [0, 0, 1]
                 ])
             else:
-                raise ValueError("axis 必须是 'x', 'y', 'z'")
+                raise ValueError("axis must be 'x', 'y', 'z'")
         else:
             axis = np.asarray(axis, dtype=float)
             axis = axis / np.linalg.norm(axis)
@@ -196,7 +194,7 @@ def depth_layer_scan(depth,
                                         rgb=rgb,
                                         height=height,
                                         cfg=cfg)
-    if pts.shape[0] == 0:  # 过滤后点云为空，则直接返回None
+    if pts.shape[0] == 0:
         return None, None, None, None
 
     angles_intervals, dist = map_pts_to_intervals(
@@ -206,9 +204,9 @@ def depth_layer_scan(depth,
         default_value=cfg.laserscan_cfg['default_value']
     )
     angles = (angles_intervals[:, 0] + angles_intervals[:, 1]) / 2.0
-    dist[dist > cfg.laserscan_cfg['default_value']] = cfg.laserscan_cfg['default_value']  # 限制最大距离
-    x_coord = dist * np.cos(angles)  # X坐标
-    y_coord = dist * np.sin(angles)  # Y坐标
+    dist[dist > cfg.laserscan_cfg['default_value']] = cfg.laserscan_cfg['default_value']  # restrict the max dis
+    x_coord = dist * np.cos(angles)
+    y_coord = dist * np.sin(angles)
     return x_coord, y_coord, angles, dist
 
 

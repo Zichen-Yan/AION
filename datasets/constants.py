@@ -27,11 +27,6 @@ FULL_OBJECT_CLASS_LIST = (
     + BATHROOM_OBJECT_CLASS_LIST
 )
 
-MOVE_AHEAD = "MoveAhead"
-ROTATE_LEFT = "RotateLeft"
-ROTATE_RIGHT = "RotateRight"
-LOOK_UP = "LookUp"
-LOOK_DOWN = "LookDown"
 DONE = "Done"
 
 DONE_ACTION_INT = 5

@@ -1,14 +1,7 @@
-# visualization_util.py
-
 import os
 import cv2
 import math
 import json
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.colors as mcolors
-import matplotlib.cm as cm
-import matplotlib.gridspec as gridspec
 import torchvision.transforms.functional as TF
 from torchvision.transforms.functional import InterpolationMode
 import torch

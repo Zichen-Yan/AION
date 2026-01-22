@@ -32,7 +32,6 @@ def a3c_loss(args, player, gpu_id, model_options):
         R = torch.zeros(1, device=device)
     else:
         with torch.no_grad():
-            # _, output = player.eval_at_state(model_options)
             output = player.eval_at_state(model_options)
             R = output.value.squeeze().to(device)
 
@@ -72,23 +71,6 @@ def transfer_gradient_from_player_to_shared(player, shared_model, gpu_id):
             else:
                 shared_param._grad = param.grad.cpu()
 
-
-def transfer_gradient_to_shared(gradient, shared_model, gpu_id):
-    """ Transfer the gradient from the player's model to the shared model
-        and step """
-    i = 0
-    for name, param in shared_model.named_parameters():
-        if param.requires_grad:
-            if gradient[i] is None:
-                param._grad = torch.zeros(param.shape)
-            elif gpu_id < 0:
-                param._grad = gradient[i]
-            else:
-                param._grad = gradient[i].cpu()
-
-        i += 1
-
-
 def get_params(shared_model, gpu_id):
     """ Copies the parameters from shared_model into theta. """
     theta = {}
@@ -101,39 +83,11 @@ def get_params(shared_model, gpu_id):
             theta[name] = param_copied
     return theta
 
-
-def update_loss(sum_total_loss, total_loss):
-    if sum_total_loss is None:
-        return total_loss
-    else:
-        return sum_total_loss + total_loss
-
-
 def reset_player(player):
     # --- End of addition ---
     player.eps_len = 0
     player.clear_actions()
     player.repackage_hidden()
-
-
-def SGD_step(theta, grad, lr):
-    theta_i = {}
-    j = 0
-    for name, param in theta.items():
-        if grad[j] is not None and "exclude" not in name and "ll" not in name:
-            theta_i[name] = param - lr * grad[j]
-        else:
-            theta_i[name] = param
-        j += 1
-
-    return theta_i
-
-
-def get_scenes_to_use(player, scenes, args):
-    if args.new_scene:
-        return scenes
-    return [player.episode.environment.scene_name]
-
 
 def compute_loss(args, player, gpu_id, model_options):
     policy_loss, value_loss, entropy = a3c_loss(args, player, gpu_id, model_options)
@@ -186,28 +140,5 @@ def compute_spl(player, start_state):
     
     spl = best_path_len / max(actual_path_len, best_path_len)
     return spl, best_path_len
-
-
-def compute_exploration_metrics(player):
-    """Computes exploration-specific metrics at the end of an episode."""
-
-    # Default values
-    coverage_rate = 0.0
-    area_per_step = 0.0
-
-    # Ensure the episode object has the necessary attributes
-    if hasattr(player.episode, 'total_navigable_grids') and player.episode.total_navigable_grids > 0:
-        total_grids = player.episode.total_navigable_grids
-        visited_grids = total_grids-len(player.episode.navigable_points)
-        coverage_rate = visited_grids / total_grids
-
-        # if hasattr(player.episode, 'grid_size') and player.eps_len > 0:
-        #     grid_area = player.episode.grid_size ** 2
-        #     area_per_step = (visited_grids * grid_area) / player.eps_len
-
-    return {
-        'coverage_rate': coverage_rate,
-        'area_per_step': area_per_step,
-    }
 
 

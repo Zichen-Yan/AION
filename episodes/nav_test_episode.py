@@ -90,7 +90,7 @@ class NavTestEpisode(NavTrainEpisode):
 
         episode = self.all_data[self.all_data_enumerator]
         while True:
-            if episode["goal_object_type"] == "CD":
+            if episode["goal_object_type"] == "CD": # CD is missing in the scene
                 episode["goal_object_type"] = 'Book'
 
             if episode["goal_object_type"] not in targets:

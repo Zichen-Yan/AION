@@ -106,9 +106,8 @@ class ExplorationTrainEpisode(Episode):
                     except TimeoutError:
                         time.sleep(0.1)
 
-        # 3. Initialize the history with the embedding of the starting state.
         if self.model is None:
-            raise ValueError("Model reference has not been set in ExplorationTrainEpisode. Call set_model() before starting.")
+            raise ValueError("Model reference has not been set. Call set_model() before starting.")
 
     def step(self, action):
         action = self.actions_list[action]
@@ -123,6 +122,7 @@ class ExplorationTrainEpisode(Episode):
 
     def judge(self, action):
         action_name = action['action']
+        # training log
         if action_name == "forward":
             self.forward_cnt += 1
         elif action_name in ["turn_left", "turn_right"]:
@@ -156,6 +156,6 @@ class ExplorationTrainEpisode(Episode):
         d_min = np.min(dists)
         safe_dist = 1.0/3.0
         if d_min <= safe_dist:
-            reward += - (np.exp(2 * (safe_dist - d_min)) - 1)
+            reward += 1 - np.exp(2 * (safe_dist - d_min))
 
         return reward

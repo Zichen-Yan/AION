@@ -22,12 +22,13 @@ data/ and ckpt/ should be put in the root dir.
 
 ## Train Goal-Reaching 
 #### AIONg
+split = [14/8, 18/4]
 ```bash
 python main.py \
     --title AIONg\
     --model AIONg\
     --gpu_ids 0\
-    --workers 12\
+    --workers 25\
     --vis False\
     --save_model_dir trained_models\
     --max_episode_length 50\
@@ -52,13 +53,14 @@ python main.py \
     --title ZSON \
     --model ZSON \
     --gpu_ids 0 \
-    --workers 8 \
+    --workers 30 \
     --vis False \
     --save_model_dir trained_models \
     --max_episode_length 50 \
     --snapToGrid False \
     --train_thin 250 \
     --rollout_steps 128 \
+    --max_steps 1e7 \
     --split 18/4 \
     --add_stats True
 ```
@@ -109,7 +111,7 @@ python main.py \
     --model AIONe \
     --episode_type ExplorationTrainEpisode \
     --gpu_ids 0 \
-    --workers 20 \
+    --workers 40 \
     --vis False \
     --save_model_dir trained_models \
     --max_episode_length 50 \
