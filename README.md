@@ -47,7 +47,8 @@ python main.py \
     --add_collision_reward True
 ```
  
-#### [ZSON, BaseModel, GCN, MJO]:
+#### Baselines
+model = [ZSON, BaseModel, GCN, MJO]
 ```bash
 python main.py \
     --title ZSON \
@@ -66,7 +67,7 @@ python main.py \
 ```
 
 ## Evaluate Goal-Reaching
-
+get_seen_data = [False, True]
 #### AIONg
 ```bash
 python main.py \
@@ -85,7 +86,7 @@ python main.py \
     --save_episode_data True
 ```
 
-#### [ZSON, BaseModel, GCN, MJO]
+#### Baselines
 ```bash
 python main.py \
     --eval \
