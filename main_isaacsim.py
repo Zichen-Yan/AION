@@ -349,7 +349,6 @@ class IsaacSimEnv(Node):
         }, done
 
     def spin_sleep(self, duration_sec):
-        """等待 duration_sec 秒，但期间持续 spin 回调"""
         start = time.time()
         while (time.time() - start) < duration_sec and rclpy.ok():
             rclpy.spin_once(self, timeout_sec=0.05)  # 让订阅继续刷新
@@ -410,10 +409,7 @@ def isaac_val(args, max_count, objcfg, nav_model, exp_model, dual_mode):
                 "Mode": mode,
                 "pos": obs['pos'],
                 "heading_rad": obs['heading_rad'],
-                "collision": obs['collision'],
-                # "depth": obs['depth'].squeeze().tolist(),
-                # "height": obs['height'],
-                # "ROI": [player.info['center_x'], player.info['center_y']],
+                "collision": obs['collision']
             }
 
             if action_str == "Done" and dual_mode == 2:

@@ -35,20 +35,6 @@ class ROSDualAgent:
         self.save_dir = f"DroneSim/vis_results/{args.logdir}"
         os.makedirs(self.save_dir, exist_ok=True)
 
-        # Define subfolders
-        subfolders = ["rgb1", "depth_roi", "rgb3", "bbox", "depth_proj"]
-
-        # Create dict to store full paths
-        self.save_paths = {}
-        for name in subfolders:
-            folder_path = os.path.join(self.save_dir, name)
-            os.makedirs(folder_path, exist_ok=True)
-            self.save_paths[name] = folder_path
-
-        self.fig1, self.ax1 = plt.subplots(figsize=(6.4, 4.8), dpi=100)
-        self.fig5 = plt.figure(figsize=(3, 3), dpi=100)
-        self.ax5 = self.fig5.add_subplot(111, projection="polar")
-
         self.success = False
         self.cnt = 0
 
@@ -172,100 +158,10 @@ class ROSDualAgent:
             tmp = torch.tensor([center_x, center_y, mean_depth], dtype=torch.float32).to(self.device)
             ROI = torch.cat([tmp, height])
             model_input.ROI = ROI
-            # self.log(model_input, info, obs)
 
         self.cnt += 1
         self.model_input = model_input
         return info
-
-    def log(self, model_input, info, obs):
-        h, w = model_input.raw_depth.shape
-        hy = int((info['y_horizon'] + 0.5) * h)
-        # ---------- 准备ROI框 ----------
-        if info["found_flag"]:
-            cx = int((info["center_x"] + 0.5) * w)
-            cy = int((info["center_y"] + 0.5) * h)
-            W = int(info["W"] * w)
-            H = int(info["H"] * h)
-
-            pt1 = (cx - W // 2, cy - H // 2)
-            pt2 = (cx + W // 2, cy + H // 2)
-        else:
-            pt1, pt2 = None, None
-
-        # ---------- 深度图伪彩化 ----------
-        depth_vis = np.clip(model_input.raw_depth, 0, 10.0)
-        depth_vis = (depth_vis / depth_vis.max() * 255).astype(np.uint8)
-        depth_vis = cv2.cvtColor(cv2.applyColorMap(depth_vis, cv2.COLORMAP_JET), cv2.COLOR_BGR2RGB)
-
-        # ---------- 绘制ROI框 ----------
-        if info["found_flag"]:
-            cv2.rectangle(depth_vis, pt1, pt2, (255, 0, 0), 2)
-            cv2.circle(depth_vis, (cx, cy), 4, (255, 0, 0), -1)
-
-        # 1. Save RGB (raw)
-        # ======================
-        rgb = cv2.cvtColor(model_input.raw_rgb, cv2.COLOR_RGB2BGR)
-        save_path = os.path.join(self.save_paths["rgb1"], f"{self.cnt:03d}.png")
-        cv2.imwrite(save_path, rgb)
-
-        # ======================
-        # 2. Save depth + horizon line (depth_roi)
-        # ======================
-        depth_img = cv2.cvtColor(depth_vis, cv2.COLOR_RGB2BGR)
-        # draw horizon
-        cv2.line(depth_img, (0, hy), (depth_img.shape[1], hy), (0, 0, 0), 2)  # yellow BGR
-        cv2.putText(depth_img, "Horizon Line", (10, hy - 15),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
-
-        save_path = os.path.join(self.save_paths["depth_roi"], f"{self.cnt:03d}.png")
-        cv2.imwrite(save_path, depth_img)
-
-        # ======================
-        # 3. Save third-person rgb (rgb3)
-        # ======================
-        rgb3 = cv2.cvtColor(obs["rgb_3rd"], cv2.COLOR_RGB2BGR)
-        save_path = os.path.join(self.save_paths["rgb3"], f"{self.cnt:03d}.png")
-        cv2.imwrite(save_path, rgb3)
-
-        # ======================
-        # 4. Save bbox attention map
-        # ======================
-        att = (model_input.raw_obj_attention.cpu().numpy() * 255).astype(np.uint8)
-        save_path = os.path.join(self.save_paths["bbox"], f"{self.cnt:03d}.png")
-        cv2.imwrite(save_path, att)
-        # --------------------
-        gamma = 0.6
-        r = np.power(model_input.dists, gamma)
-        # angles → radians in [0, 2π)
-        theta = np.deg2rad(model_input.angles)
-        theta = (theta + 2 * np.pi) % (2 * np.pi)
-        # keep only 0–π (0–180°)
-        mask = theta <= np.pi
-        theta = theta[mask]
-        r = r[mask]
-        c = model_input.dists[mask]
-
-        # orientation and angular window
-        self.ax5.cla()
-        self.ax5.set_theta_zero_location("E")  # 0° at +x (use "N" if you prefer forward/up)
-        self.ax5.set_theta_direction(1)  # CCW increasing
-        self.ax5.set_thetamin(0)
-        self.ax5.set_thetamax(180)
-        self.ax5.set_thetagrids([0, 45, 90, 135, 180])  # <- requested ticks
-
-        # points
-        self.ax5.scatter(theta, r, c=c, cmap='viridis', s=18, vmin=0, vmax=1)
-
-        # keep scan lines (rays to the origin)
-        for t, rr in zip(theta, r):
-            self.ax5.plot([t, t], [0, rr], alpha=0.25, linewidth=0.8)
-
-        self.ax5.set_rlim(0, 1.0)
-        self.ax5.grid(True)
-
-        save_path = os.path.join(self.save_paths["depth_proj"], f"{self.cnt:03d}.png")
-        self.fig5.savefig(save_path)
 
     def is_center_in_middle(self, center_x, center_y, threshold):
         x_min = 0.5 - threshold / 2
