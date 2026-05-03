@@ -5,7 +5,6 @@ import numpy as np
 from obj_utils.depth_transform import depth_layer_scan_api, get_depth_ROI
 from ultralytics import YOLO
 import cv2
-import matplotlib.pyplot as plt
 import os
 
 class ROSDualAgent:
