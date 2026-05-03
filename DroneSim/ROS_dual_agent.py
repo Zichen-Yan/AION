@@ -5,23 +5,8 @@ import numpy as np
 from obj_utils.depth_transform import depth_layer_scan_api, get_depth_ROI
 from ultralytics import YOLO
 import cv2
-
 import matplotlib.pyplot as plt
 import os
-from runners.visualization_util import ResizeTo224
-from torchvision.models import resnet18, ResNet18_Weights
-import torch.nn as nn
-import h5py
-from models.clip_utils import get_transform
-from models import AIONg
-
-import matplotlib.font_manager as fm
-import matplotlib as mpl
-mpl.rcParams['pdf.fonttype'] = 42
-mpl.rcParams['ps.fonttype'] = 42
-
-# Set the font path
-font_path = '/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman.ttf'
 
 class ROSDualAgent:
     """ A navigation agent who learns with pretrained embeddings. """
@@ -67,33 +52,8 @@ class ROSDualAgent:
         self.success = False
         self.cnt = 0
 
-        if not isinstance(nav_model, AIONg):
-            self.resnet_transform = ResizeTo224(size=(224, 224), normalize=True)
-            resnet = resnet18(weights=ResNet18_Weights.IMAGENET1K_V1).eval().to(self.device)
-            self.resnet18 = nn.Sequential(*list(resnet.children())[:-2])  # -> (N, 512, 7, 7)
-            for p in self.resnet18.parameters():
-                p.requires_grad = False
-
-            self.obj_list = []
-            with open("./data/gcn/objects.txt") as f:
-                objects = f.readlines()
-                for o in objects:
-                    o = o.strip()
-                    self.obj_list.append(o)
-            n = len(self.obj_list)
-            all_glove = torch.zeros(n, 300)
-            glove = h5py.File("./data/gcn/glove.6B.300d.hdf5", "r")
-            for i in range(n):
-                all_glove[i, :] = torch.Tensor(glove[self.obj_list[i]][:])
-            self.all_glove = nn.Parameter(all_glove)
-            self.all_glove.requires_grad = False
-            self.resize = get_transform(name="resize", size=300)
-
     def action(self, obs, dual_mode):
-        if self.model.__class__.__name__ == 'AIONg':
-            self.info = self.eval_at_state(obs)
-        else:
-            self.info = self.eval_at_state2(obs)
+        self.info = self.eval_at_state(obs)
 
         if dual_mode == 1:
             return self.exp_model.forward(self.model_input)
@@ -213,139 +173,6 @@ class ROSDualAgent:
             ROI = torch.cat([tmp, height])
             model_input.ROI = ROI
             # self.log(model_input, info, obs)
-
-        self.cnt += 1
-        self.model_input = model_input
-        return info
-
-    def eval_at_state2(self, obs):
-        model_input = ModelInput()
-
-        target_name = obs["target_obj"]
-        target_embedding = self.all_glove[self.obj_list.index(target_name)]
-        model_input.target_class_embedding = gpuify(target_embedding, self.gpu_id)
-
-        model_input.hidden = self.hidden
-        model_input.target_class = obs["target_obj"]
-        model_input.action_probs = self.last_action_probs
-        model_input.last_action = self.last_action
-        # rgb================================
-        model_input.raw_rgb = obs['rgb'].copy()
-        rgb = torch.from_numpy(obs['rgb']).to(self.device) # 480 x 640 x 3
-        x = self.resnet_transform.apply(rgb)  # (1,3,224,224)
-        with torch.no_grad():
-            feat = self.resnet18(x)
-        model_input.state = feat
-
-        if rgb.ndim == 3:
-            rgb = rgb.unsqueeze(0)  # 1 x 480 x 640 x 3
-        model_input.rgb = self.resize(rgb)
-
-        # depth & height======================
-        height = torch.tensor([obs['height']]).to(self.device)
-        depth = np.squeeze(obs['depth'])
-
-        depth = np.where(np.isnan(depth) | np.isinf(depth), 10.0, depth)
-        angles, dists = depth_layer_scan_api(depth=depth, height=height.cpu().numpy())
-        model_input.angles = angles
-        model_input.dists = dists
-        model_input.depth = torch.from_numpy(dists).to(self.device)
-
-        model_input.raw_depth = depth
-        # obj detection box===================
-        obj_attention = torch.zeros_like(rgb[0, :, :, :1])
-        obj_area = 0
-        img_area = rgb.shape[1] * rgb.shape[2]
-
-        img_bgr = cv2.cvtColor(obs['rgb'], cv2.COLOR_RGB2BGR)
-        results = self.yolo_model(img_bgr, device=0, imgsz=640, verbose=False)
-        boxes = results[0].boxes
-
-        objbb = {}
-        if boxes is not None and boxes.cls.numel() > 0:
-            labels = boxes.cls.cpu().numpy().astype(int)  # 类别索引
-            confs = boxes.conf.cpu().numpy()  # 置信度
-            xyxy = boxes.xyxy.cpu().numpy().astype(int)  # 坐标框
-
-            class_id = obs["yolo_class_id"]
-            mask = (labels == class_id) & (confs > 0.5)
-
-            if mask.any():
-                self.detect_obj_cnt += 1
-                # index of the max-confidence box for this class
-                best_idx = np.where(mask)[0][confs[mask].argmax()]
-
-                if self.detect_obj_cnt >= 2 and not self.detect_obj:
-                    print("Found Target!")
-                    self.detect_obj = True
-                x1, y1, x2, y2 = xyxy[best_idx]
-
-                # area
-                obj_area += max(0, x2 - x1) * max(0, y2 - y1)
-
-                # clamp and fill attention
-                H, W, _ = obj_attention.shape
-                x1 = max(0, min(x1, W - 1))
-                x2 = max(0, min(x2, W - 1))
-                y1 = max(0, min(y1, H - 1))
-                y2 = max(0, min(y2, H - 1))
-                if x2 > x1 and y2 > y1:
-                    obj_attention[y1:y2, x1:x2, 0] = 1.0
-
-            for i in range(len(labels)):
-                cls_id = labels[i]
-                conf = confs[i]
-                box = xyxy[i]  # [x1, y1, x2, y2]
-
-                if conf < 0.5:
-                    continue
-
-                name = self.yolo_model.names[cls_id]
-                if name not in objbb:
-                    objbb[name] = list(box)
-                else:
-                    objbb[name].extend(list(box))
-        model_input.objbb = objbb
-
-        model_input.raw_obj_attention = obj_attention
-        if obj_attention.ndim == 3:
-            obj_attention = obj_attention.unsqueeze(0)
-        obj_attention = self.resize(obj_attention)
-        center_x, center_y, W, H = self.compute_box_center(obj_attention)
-
-        # Compute area ratio
-        box_area_ratio = torch.tensor([obj_area / img_area]).to(self.device)
-        # if box_area_ratio.item() > 0.15 and self.is_center_in_middle(center_x, center_y, threshold=0.8):
-        #     print("Done by Metric!!!!")
-        #     self.success = True
-
-        stats = torch.cat([center_x, center_y, W, H, box_area_ratio, height])
-        model_input.stats = stats
-
-        if self.exp_model is not None:
-            info = get_depth_ROI(model_input.raw_depth, fov=self.args.fov, camera_pitch_degrees=30,
-                                 height=height.cpu().numpy())
-
-            ROI_values = [info[k] for k in ['center_x', 'center_y', 'found_flag', 'mean_depth', 'y_horizon']]
-            ROI_values = torch.tensor(ROI_values, dtype=torch.float32).to(self.device)
-            tmp = ROI_values.float().flatten()
-            center_x = tmp[0]
-            center_y = tmp[1]
-            found_flag = tmp[2]
-            mean_depth = tmp[3]
-            y_horizon = tmp[4]
-            if found_flag:
-                center_y -= y_horizon
-                mean_depth = torch.clip(mean_depth, 0, 10) / 10.0
-            else:
-                center_y = -1
-                center_x = -1
-                mean_depth = -1
-            tmp = torch.tensor([center_x, center_y, mean_depth], dtype=torch.float32).to(self.device)
-            ROI = torch.cat([tmp, height])
-            model_input.ROI = ROI
-
-            self.log(model_input, info, obs)
 
         self.cnt += 1
         self.model_input = model_input

@@ -140,26 +140,10 @@ class PegasusApp:
         graph_prefix: str,
         CAMERA_RESOLUTION=(640, 480)
     ):
-        # FOV = 2 * atan(aperture / (2 * focal_length))
         desired_fov_degrees = 90.0
         horizontal_aperture = 24.0
-
-        # Calculate the required focal length
-        focal_length = horizontal_aperture / (
-            2 * math.tan(math.radians(desired_fov_degrees) / 2.0)
-        )
-
-        # Calculate the vertical aperture based on the image aspect ratio
-        vertical_aperture = horizontal_aperture * (
-            CAMERA_RESOLUTION[1] / CAMERA_RESOLUTION[0]
-        )
-
-        print("-" * 50)
-        print(f"Camera Settings for {desired_fov_degrees}-degree FOV:")
-        print(f"  - Focal Length: {focal_length:.2f} mm")
-        print(f"  - Horizontal Aperture: {horizontal_aperture:.2f} mm")
-        print(f"  - Vertical Aperture: {vertical_aperture:.2f} mm")
-        print("-" * 50)
+        focal_length = horizontal_aperture / (2 * math.tan(math.radians(desired_fov_degrees) / 2.0))
+        vertical_aperture = horizontal_aperture * (CAMERA_RESOLUTION[1] / CAMERA_RESOLUTION[0])
 
         # Create the camera prim with all its properties (intrinsics) defined at creation.
         # This is a more robust way to set these values than using the high-level Camera class alone.
