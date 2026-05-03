@@ -1,3 +1,4 @@
+# AI2THOR Training and Evaluation
 ## Prerequisite
 
 1.
@@ -30,7 +31,6 @@ python main.py \
     --save_model_dir trained_models\
     --max_episode_length 50\
     --snapToGrid False\
-    --train_thin 250\
     --rollout_steps 128\
     --max_steps 1e7\
     --split 18/4\
@@ -56,7 +56,6 @@ python main.py \
     --save_model_dir trained_models \
     --max_episode_length 50 \
     --snapToGrid False \
-    --train_thin 250 \
     --rollout_steps 128 \
     --max_steps 1e7 \
     --split 18/4 \
@@ -64,7 +63,7 @@ python main.py \
 ```
 
 ## Evaluate Goal-Reaching
-get_seen_data = [False, True]
+#### get_seen_data = [False, True]
 #### AIONg
 ```bash
 python main.py \
@@ -114,10 +113,48 @@ python main.py \
     --save_model_dir trained_models \
     --max_episode_length 50 \
     --snapToGrid False \
-    --train_thin 50 \
     --rollout_steps 128 \
     --scene procthor \
     --offline_data_dir ./data/procthor_offline_data/train \
     --action_space 5 \
     --max_steps 4e6
+```
+
+# IsaacSim Evaluation Env (22.04 + ROS2 + ISAACSIM 5.1.0 + Pegasus)
+## Prerequisite
+```bash
+cd ~
+git clone https://github.com/Temasek-Dynamics/SimulatorSetup.git
+cd ~/SimulatorSetup/scripts
+bash install_common.sh
+bash install_ros2.sh
+bash install_px4.sh
+```
+## Download ISAAC-SIM to 
+~/.local/share/ov/pkg/isaac-sim-5.1.0
+## Modify .bashrc
+```bash
+export ISAACSIM_PATH="${HOME}/.local/share/ov/pkg/isaac-sim-5.1.0/"
+export ISAACSIM_PYTHON_EXE="${ISAACSIM_PATH}/python.sh"
+alias ISAACSIM_PYTHON="$ISAACSIM_PATH/python.sh"
+alias ISAACSIM="$ISAACSIM_PATH/isaac-sim.sh"
+```
+## Install Pegasus Simulator
+```bash
+cd ~
+git clone https://github.com/PegasusSimulator/PegasusSimulator.git
+cd ~/PegasusSimulator/extensions
+ISAACSIM_PYTHON -m pip install -e pegasus.simulator/
+```
+## Modify the PX4 path 
+### PegasusSimulator/extensions/pegasus.simulator/config/configs.yaml
+```bash
+px4_dir: ~/SimulatorSetup/submodules/PX4-Autopilot
+```
+## Compile px4msgs
+```bash
+cd ~/px4msg_ws/src
+git clone https://github.com/PX4/px4_msgs.git
+cd ~/px4msg_ws
+colcon build
 ```

@@ -172,7 +172,7 @@ def parse_arguments():
     parser.add_argument(
         "--train_thin",
         type=int,
-        default=1000,
+        default=250,
         help="How often to print"
     )
     parser.add_argument(
