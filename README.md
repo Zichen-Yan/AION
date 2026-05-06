@@ -1,13 +1,10 @@
-# AI2THOR Training and Evaluation
+# 1. AI2THOR Training and Evaluation
 ## Prerequisite
 
-1.
 ```
 conda create -n aion python=3.10
 conda activate aion
-```
-2.
-```
+
 pip install -r requirements.txt
 pip install git+https://github.com/openai/CLIP.git
 ```
@@ -19,8 +16,8 @@ The ckpt can be found [here](https://drive.google.com/file/d/1a_Dk09y2GhtZvlXo3c
 data/ and ckpt/ should be put in the root dir.
 
 ## Train Goal-Reaching 
-#### AIONg
-split = [14/8, 18/4]
+### AIONg 
+#### split = [14/8, 18/4]
 ```bash
 python main.py \
     --title AIONg\
@@ -44,8 +41,8 @@ python main.py \
     --add_collision_reward True
 ```
  
-#### Baselines
-model = [ZSON, BaseModel, GCN, MJO]
+### Baselines
+#### model = [ZSON, BaseModel, GCN, MJO]
 ```bash
 python main.py \
     --title ZSON \
@@ -63,8 +60,8 @@ python main.py \
 ```
 
 ## Evaluate Goal-Reaching
+### AIONg
 #### get_seen_data = [False, True]
-#### AIONg
 ```bash
 python main.py \
     --eval \
@@ -101,7 +98,7 @@ python main.py \
 ```
 
 ## Train Exploration
-#### AIONe
+### AIONe
 ```bash
 python main.py \
     --title AIONe \
@@ -120,7 +117,7 @@ python main.py \
     --max_steps 4e6
 ```
 
-# IsaacSim Evaluation Env (22.04 + ROS2 + ISAACSIM 5.1.0 + Pegasus)
+# 2. IsaacSim Evaluation Env (22.04 + ROS2 + ISAACSIM 5.1.0 + Pegasus)
 ## Prerequisite
 ```bash
 cd ~
@@ -157,4 +154,23 @@ cd ~/px4msg_ws/src
 git clone https://github.com/PX4/px4_msgs.git
 cd ~/px4msg_ws
 colcon build
+```
+
+# 3. Evaluation in ISAAC-SIM
+## 3.1 Terminal 1 Start Simulator
+```bash
+# start pegasus simulator in IsaacSim with PX4 SITL
+conda deactivate
+source ~/IsaacSim-ros_workspaces/build_ws/humble/humble_ws/install/setup.bash
+# start pegasus simulator in IsaacSim with PX4 SITL
+ISAACSIM_PYTHON DroneSim/isaac_env.py
+```
+## 3.2 Terminal 2 Run DDS
+```bash
+MicroXRCEAgent udp4 -p 8888
+```
+## 3.3 Terminal 3 Run Algorithm
+```bash
+conda activate aion
+python main_isaacsim.py
 ```
