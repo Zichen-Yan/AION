@@ -118,7 +118,7 @@ python main.py \
 ```
 
 # 2. IsaacSim Evaluation Env (22.04 + ROS2 + ISAACSIM 5.1.0 + Pegasus)
-## Download ISAAC-SIM to 
+## Download [ISAAC-SIM](https://docs.isaacsim.omniverse.nvidia.com/5.1.0/installation/quick-install.html) to 
 ~/.local/share/ov/pkg/isaac-sim-5.1.0
 ## Modify .bashrc
 ```bash
