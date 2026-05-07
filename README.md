@@ -118,15 +118,6 @@ python main.py \
 ```
 
 # 2. IsaacSim Evaluation Env (22.04 + ROS2 + ISAACSIM 5.1.0 + Pegasus)
-## Prerequisite
-```bash
-cd ~
-git clone https://github.com/Temasek-Dynamics/SimulatorSetup.git
-cd ~/SimulatorSetup/scripts
-bash install_common.sh
-bash install_ros2.sh
-bash install_px4.sh
-```
 ## Download ISAAC-SIM to 
 ~/.local/share/ov/pkg/isaac-sim-5.1.0
 ## Modify .bashrc
@@ -136,6 +127,11 @@ export ISAACSIM_PYTHON_EXE="${ISAACSIM_PATH}/python.sh"
 alias ISAACSIM_PYTHON="$ISAACSIM_PATH/python.sh"
 alias ISAACSIM="$ISAACSIM_PATH/isaac-sim.sh"
 ```
+## ROS2 PX4 Prerequisite
+```bash
+cd DroneSim/
+bash install.sh
+```
 ## Install Pegasus Simulator
 ```bash
 cd ~
@@ -143,7 +139,7 @@ git clone https://github.com/PegasusSimulator/PegasusSimulator.git
 cd ~/PegasusSimulator/extensions
 ISAACSIM_PYTHON -m pip install -e pegasus.simulator/
 ```
-## Modify the PX4 path 
+## Modify the PX4 path in
 ### PegasusSimulator/extensions/pegasus.simulator/config/configs.yaml
 ```bash
 px4_dir: ~/SimulatorSetup/submodules/PX4-Autopilot

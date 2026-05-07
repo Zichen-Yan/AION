@@ -1,0 +1,19 @@
+# configs/ubuntu22.04.yaml
+system_packages:
+  - curl
+  - git
+  - tmux
+
+github_repos:
+  - name: PX4-Autopilot
+    url: https://github.com/Temasek-Dynamics/PX4-Autopilot.git
+    branch: v1.13.0_raynor
+    path: submodules/PX4-Autopilot
+    QGC_VERSION: v4.4.3
+
+# example for python
+python_version: "3.10"
+
+python_packages:
+  - numpy==1.23.0
+  - pandas==1.5.3
