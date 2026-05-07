@@ -128,6 +128,7 @@ alias ISAACSIM_PYTHON="$ISAACSIM_PATH/python.sh"
 alias ISAACSIM="$ISAACSIM_PATH/isaac-sim.sh"
 ```
 ## ROS2 PX4 Prerequisite
+### Change the ROS version in DroneSim/scripts/install_ros2.sh (ROS2_VERSION)
 ```bash
 cd DroneSim/
 bash install.sh
