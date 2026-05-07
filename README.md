@@ -130,6 +130,9 @@ alias ISAACSIM="$ISAACSIM_PATH/isaac-sim.sh"
 ## ROS2 PX4 Prerequisite
 #### Change the ROS2 version in DroneSim/scripts/install_ros2.sh (ROS2_VERSION)
 ```bash
+cd ~
+git clone https://github.com/isaac-sim/IsaacSim-ros_workspaces.git
+
 cd DroneSim/
 bash install.sh
 ```
