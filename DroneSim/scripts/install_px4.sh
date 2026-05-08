@@ -3,7 +3,7 @@ set -e
 
 export MODULE_DIR=~/PX4-Autopilot
 
-git clone -b v1.16.0 \
+git clone -b v1.16.0-alpha1 \
   https://github.com/Temasek-Dynamics/PX4-Autopilot.git \
   $MODULE_DIR \
   --recursive
