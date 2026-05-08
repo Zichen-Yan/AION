@@ -181,7 +181,7 @@ echo "source ~/px4msg_ws/install/setup.bash" >> ~/.bashrc
 # start pegasus simulator in IsaacSim with PX4 SITL
 conda deactivate
 source ~/IsaacSim-ros_workspaces/build_ws/humble/humble_ws/install/setup.bash
-# start pegasus simulator in IsaacSim with PX4 SITL
+
 cd ~/AION
 export MDL_USER_PATH=DroneSim/Scenes/MTL
 ISAACSIM_PYTHON DroneSim/isaac_env.py
