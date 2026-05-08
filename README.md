@@ -165,6 +165,8 @@ px4_dir: ~/PX4-Autopilot
 ```
 ## Compile px4msgs
 ```bash
+sudo apt install python3-empy python3-colcon-common-extensions
+
 mkdir -p ~/px4msg_ws/src
 cd ~/px4msg_ws/src
 git clone https://github.com/PX4/px4_msgs.git
