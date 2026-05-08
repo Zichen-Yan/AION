@@ -387,8 +387,9 @@ def isaac_val(args, max_count, objcfg, nav_model, exp_model, dual_mode):
             print(f"[Step {i}] dt={dt:.4f}s  freq={freq:.2f} Hz")
 
             if done:
-                success_flag = True
-                print("Success!!!!!!!!!")
+                if player.success:
+                    success_flag = True
+                    print("Success!!!!!!!!!")
                 break
 
         save_file = os.path.join(player.save_dir, "step_log.json")

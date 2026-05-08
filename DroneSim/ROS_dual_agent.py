@@ -128,9 +128,8 @@ class ROSDualAgent:
 
         # Compute area ratio
         box_area_ratio = torch.tensor([obj_area / img_area]).to(self.device)
-        # if box_area_ratio.item()>0.15 and self.is_center_in_middle(center_x, center_y, threshold=0.8):
-        #     print("Done by Metric!!!!")
-        #     self.success = True
+        if box_area_ratio.item()>0.15 and self.is_center_in_middle(center_x, center_y, threshold=0.8):
+            self.success = True
 
         stats = torch.cat([center_x, center_y, W, H, box_area_ratio, height])
         model_input.stats = stats
