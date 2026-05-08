@@ -10,7 +10,7 @@ idna
 itsdangerous
 Jinja2
 MarkupSafe
-numpy
+numpy==1.26.0
 opencv-python
 Pillow
 progressbar2
@@ -32,3 +32,4 @@ einops
 timm
 open3d
 prior
+ultralytics

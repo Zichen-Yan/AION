@@ -172,6 +172,7 @@ cd ~/px4msg_ws/src
 git clone https://github.com/PX4/px4_msgs.git
 cd ~/px4msg_ws
 colcon build
+echo "source ~/px4msg_ws/install/setup.bash" >> ~/.bashrc
 ```
 
 # 3. Evaluation in ISAAC-SIM
