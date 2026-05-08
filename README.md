@@ -142,7 +142,7 @@ bash install.sh
 ## Install Micro-XRCE-DDS
 ```bash
 cd ~
-git clone -b v2.4.3 https://github.com/eProsima/Micro-XRCE-DDS-Agent.git
+git clone https://github.com/eProsima/Micro-XRCE-DDS-Agent.git
 cd Micro-XRCE-DDS-Agent
 mkdir build
 cd build
@@ -169,7 +169,7 @@ sudo apt install python3-empy python3-colcon-common-extensions
 
 mkdir -p ~/px4msg_ws/src
 cd ~/px4msg_ws/src
-git clone https://github.com/PX4/px4_msgs.git
+git clone -b release/1.16 https://github.com/PX4/px4_msgs.git
 cd ~/px4msg_ws
 colcon build
 echo "source ~/px4msg_ws/install/setup.bash" >> ~/.bashrc
