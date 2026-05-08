@@ -157,7 +157,7 @@ ISAACSIM_PYTHON -m pip install -e pegasus.simulator/
 ## Modify the PX4 path in
 ### PegasusSimulator/extensions/pegasus.simulator/config/configs.yaml
 ```bash
-px4_dir: [Path to Proj]/DroneSim/submodules/PX4-Autopilot
+px4_dir: ~/PX4-Autopilot
 ```
 ## Compile px4msgs
 ```bash
