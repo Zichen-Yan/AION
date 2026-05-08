@@ -36,9 +36,6 @@ def enu_to_ned(x_enu: float, y_enu: float, z_enu: float):
     z_ned = -z_enu
     return x_ned, y_ned, z_ned
 
-def ned_to_enu(x_ned: float, y_ned: float, z_ned: float):
-    return y_ned, x_ned, -z_ned
-
 def forward_speed_to_enu(v_forward, yaw_rad):
     vx_enu = v_forward * math.cos(yaw_rad)
     vy_enu = v_forward * math.sin(yaw_rad)
@@ -67,7 +64,6 @@ class IsaacSimEnv(Node):
         # --- parameters ---
         self.bridge = CvBridge()
         self.depth_max_dis = 10.0
-        self.current_pose = None
 
         self.rgb_image = np.zeros((480, 640, 3), dtype=np.uint8)
         self.depth_image = np.zeros((480, 640, 1), dtype=np.float32)
@@ -100,10 +96,12 @@ class IsaacSimEnv(Node):
         self.nav_state = 0
         self.x_ned = None
         self.y_ned = None
-        self.z_ned = None  # VehicleLocalPosition.z（向下为正）
+        self.z_ned = None  # VehicleLocalPosition.z (down is positive)
+        self.collision = False
+        self._heading_rad = math.nan
 
         self._last_sp = None
-        self._use_velocity_mode = False  # 起飞阶段先用 position 模式
+        self._use_velocity_mode = False
 
         self._timer = self.create_timer(self.keepalive_period, self._on_timer)
         self.get_logger().info("ROS2 IsaacSimEnv initialized with PX4 bridge topics.")
@@ -112,52 +110,37 @@ class IsaacSimEnv(Node):
     def _on_lpos(self, msg: VehicleLocalPosition):
         self.x_ned = float(msg.x)
         self.y_ned = float(msg.y)
-        self.z_ned = float(msg.z)  # pos：向下为正
-
+        self.z_ned = float(msg.z)  # down is positive
         self._heading_rad = float(getattr(msg, "heading", math.nan))
-        self._ned_vx = float(getattr(msg, "vx", math.nan))
-        self._ned_vy = float(getattr(msg, "vy", math.nan))
-        self._ned_vz = float(getattr(msg, "vz", math.nan))
 
     def _on_status(self, msg: VehicleStatus):
         self.armed = (msg.arming_state == VehicleStatus.ARMING_STATE_ARMED)
         self.nav_state = msg.nav_state
 
-    def _on_rgb(self, msg: Image):
+    def _decode_rgb(self, msg: Image, attr: str):
         try:
-            self.rgb_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding="rgb8")
+            setattr(self, attr, self.bridge.imgmsg_to_cv2(msg, desired_encoding="rgb8"))
         except Exception:
-            print("RGB error！")
-            pass
+            print(f"RGB decode error ({attr})!")
+
+    def _on_rgb(self, msg: Image):
+        self._decode_rgb(msg, "rgb_image")
+
+    def _on_rgb_3rd(self, msg: Image):
+        self._decode_rgb(msg, "rgb_3rd")
 
     def _on_depth(self, msg: Image):
         try:
             img = self.bridge.imgmsg_to_cv2(msg, desired_encoding="32FC1")
-            img = np.nan_to_num(img, nan=self.depth_max_dis)
-            self.depth_image = img[:, :, None]
+            self.depth_image = np.nan_to_num(img, nan=self.depth_max_dis)[:, :, None]
         except Exception:
-            print("Depth error！")
-            pass
-
-    def _on_rgb_3rd(self, msg: Image):
-        try:
-            self.rgb_3rd = self.bridge.imgmsg_to_cv2(msg, desired_encoding="rgb8")
-        except Exception:
-            print("RGB error！")
-            pass
+            print("Depth decode error!")
 
     def _col(self, msg: Bool):
-        try:
-            self.collision = msg.data
-        except Exception:
-            print("collision error！")
-            pass
+        self.collision = msg.data
 
     def _on_timer(self):
-        """
-        20Hz 定时器：持续发布 OffboardControlMode + 最近一次 TrajectorySetpoint（PX4 Offboard 需要保活）
-        """
-        # OffboardControlMode：根据当前阶段选择 position 或 velocity
+        # OffboardControlMode: position or velocity
         offb = OffboardControlMode()
         offb.timestamp = now_us(self)
         offb.position = not self._use_velocity_mode
@@ -169,17 +152,14 @@ class IsaacSimEnv(Node):
         offb.direct_actuator = False
         self.pub_offb.publish(offb)
 
-        # 复发最近一次 setpoint
         if self._last_sp is not None:
-            # 刷新时间戳
             self._last_sp.timestamp = offb.timestamp
             self.pub_ts.publish(self._last_sp)
 
     # ---------- PX4 Commands ----------
     def _send_vehicle_command(self, command: int, **params):
         """
-        发送通用 VehicleCommand
-        常用：
+        Send VehicleCommand
           - ARM/DISARM: command=VehicleCommand.VEHICLE_CMD_COMPONENT_ARM_DISARM, param1=1/0
           - SET_MODE:   command=VehicleCommand.VEHICLE_CMD_DO_SET_MODE, param1=1(custom), param2=6(OFFBOARD)
         """
@@ -192,7 +172,6 @@ class IsaacSimEnv(Node):
         cmd.source_component = 1
         cmd.from_external = True
 
-        # 将 param1..param7 可选写入
         for i in range(1, 8):
             key = f"param{i}"
             if key in params:
@@ -201,7 +180,6 @@ class IsaacSimEnv(Node):
         self.pub_cmd.publish(cmd)
 
     def enter_offboard_and_arm(self):
-        # 先 1.5s 保活（和你原来一致）
         t_end = self.get_clock().now() + Duration(seconds=0.05)
         while self.get_clock().now() < t_end:
             offb = OffboardControlMode()
@@ -221,17 +199,11 @@ class IsaacSimEnv(Node):
             self.pub_ts.publish(sp)
             rclpy.spin_once(self, timeout_sec=0.0)
 
-        # 切 Offboard
         self._send_vehicle_command(VehicleCommand.VEHICLE_CMD_DO_SET_MODE, param1=1.0, param2=6.0)
-
-        # Arm
         self._send_vehicle_command(VehicleCommand.VEHICLE_CMD_COMPONENT_ARM_DISARM, param1=1.0, param2=0.0)
 
     def arm(self):
-        """
-        进入 Offboard 并解锁，可选更新目标悬停高度。
-        """
-        self._use_velocity_mode = False  # 起飞阶段用 position
+        self._use_velocity_mode = False
         self._last_sp = None
         while not self.armed or self.nav_state != VehicleStatus.NAVIGATION_STATE_OFFBOARD:
             self.enter_offboard_and_arm()
@@ -257,7 +229,7 @@ class IsaacSimEnv(Node):
         if position_enu is None:
             x_ned = self.x_ned
             y_ned = self.y_ned
-            z_ned = self.z_ned  - 0.5 # -0.5
+            z_ned = self.z_ned - 0.5
         else:
             x_enu, y_enu, z_enu = map(float, position_enu)
             x_ned, y_ned, z_ned = enu_to_ned(x_enu, y_enu, z_enu)
@@ -284,9 +256,6 @@ class IsaacSimEnv(Node):
     def vel_cnt(self,
                 velocity_enu: tuple,
                 yaw_rate_rad: float = 0.0):
-        """
-        切换到速度模式，通过 ENU 速度指令控制，无限持续直到外部更新。
-        """
         vx_enu, vy_enu, vz_enu = map(float, velocity_enu)
 
         self._use_velocity_mode = True
@@ -302,56 +271,41 @@ class IsaacSimEnv(Node):
         sp.yawspeed = -yaw_rate_rad
         self._last_sp = sp
 
-    def reset(self):
-        self.arm()
-        self.start_height = self.z_ned
-
-        z_target = self.take_off()
-        while abs(self.z_ned - z_target) > 0.05:
-            rclpy.spin_once(self, timeout_sec=0.05)
-
-        self.vel_cnt((0.0, 0.0, 0.0))
-        obs = {
+    def _get_obs(self) -> dict:
+        return {
             "rgb": self.rgb_image,
             "depth": self.depth_image,
             "rgb_3rd": self.rgb_3rd,
-            "height": self.start_height - self.z_ned,  # ENU
+            "height": self.start_height - self.z_ned,
             "target_obj": self.target_obj_class,
             "yolo_class_id": self.yolo_class_id,
             "pos": [self.x_ned, self.y_ned, self.z_ned],
             "heading_rad": self._heading_rad,
-            "collision": self.collision
+            "collision": self.collision,
         }
-        return obs
+
+    def reset(self):
+        self.arm()
+        self.start_height = self.z_ned
+        z_target = self.take_off()
+        while abs(self.z_ned - z_target) > 0.05:
+            rclpy.spin_once(self, timeout_sec=0.05)
+        self.vel_cnt((0.0, 0.0, 0.0))
+        return self._get_obs()
 
     def step(self, action_str):
         ang_vel, lin_vel, done = self.normalize_action(action_str)
         if done:
             self.vel_cnt((0.0, 0.0, 0.0))
         else:
-            vx, vy, vz = lin_vel
-            if ang_vel!=0:
-                self.turn(ang_vel)
-            else:
-                self.vel_cnt((vx, vy, vz), ang_vel)
-        self.spin_sleep(0.5) # 0.5
-
-        return {
-            "rgb": self.rgb_image,
-            "depth": self.depth_image,
-            "rgb_3rd": self.rgb_3rd,
-            "height": self.start_height - self.z_ned,  # ENU
-            "target_obj": self.target_obj_class,
-            "yolo_class_id": self.yolo_class_id,
-            "pos": [self.x_ned, self.y_ned, self.z_ned],
-            "heading_rad": self._heading_rad,
-            "collision": self.collision
-        }, done
+            self.vel_cnt(lin_vel, ang_vel)
+        self.spin_sleep(0.5)
+        return self._get_obs(), done
 
     def spin_sleep(self, duration_sec):
         start = time.time()
         while (time.time() - start) < duration_sec and rclpy.ok():
-            rclpy.spin_once(self, timeout_sec=0.05)  # 让订阅继续刷新
+            rclpy.spin_once(self, timeout_sec=0.05)
 
     # ---------- Helper ----------
     def normalize_action(self, action):
@@ -370,7 +324,7 @@ class IsaacSimEnv(Node):
             vx, vy = forward_speed_to_enu(vx, self._heading_rad)
         elif action == 'Done':
             done = True
-        return yaw_rate, [vx, vy, vz], done
+        return yaw_rate, (vx, vy, vz), done
 
 
 def isaac_val(args, max_count, objcfg, nav_model, exp_model, dual_mode):
@@ -447,7 +401,7 @@ def isaac_val(args, max_count, objcfg, nav_model, exp_model, dual_mode):
 
         episode_info = {
             "total_time_sec": total_time,
-            "success": success_flag,  # <-- added
+            "success": success_flag,
             "object": obs["target_obj"]
         }
         with open(time_file, "w") as f:
@@ -483,7 +437,7 @@ def main(args, nav_model, exp_model, dual_mode, env_name, env_step, obj_name):
 
 
 if __name__ == "__main__":
-    with open(("ckpt/args.json"), "r") as f:
+    with open("ckpt/args.json", "r") as f:
         args_dict = json.load(f)
     args = argparse.Namespace(**args_dict)
 
@@ -504,8 +458,7 @@ if __name__ == "__main__":
     exp_model.load_state_dict(saved_state, strict=False)
     exp_model = exp_model.to(f"cuda:{args.gpu_id}")
 
-    # 0:both, 1:exp, 2:reach
-    dual_mode = 0
+    dual_mode = 0  # 0: both, 1: explore only, 2: goal-reach only
 
     env_idx = 2
     env_name = [
