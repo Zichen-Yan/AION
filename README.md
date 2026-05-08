@@ -163,6 +163,7 @@ colcon build
 conda deactivate
 source ~/IsaacSim-ros_workspaces/build_ws/humble/humble_ws/install/setup.bash
 # start pegasus simulator in IsaacSim with PX4 SITL
+export MDL_USER_PATH=DroneSim/Scenes/MTL
 ISAACSIM_PYTHON DroneSim/isaac_env.py
 ```
 ## 3.2 Terminal 2 Run DDS
