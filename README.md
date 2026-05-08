@@ -184,5 +184,6 @@ MicroXRCEAgent udp4 -p 8888
 ## 3.3 Terminal 3 Run Algorithm
 ```bash
 conda activate aion
+source ~/IsaacSim-ros_workspaces/build_ws/humble/humble_ws/install/setup.bash
 python main_isaacsim.py
 ```

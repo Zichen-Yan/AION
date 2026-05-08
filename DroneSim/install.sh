@@ -1,11 +1,6 @@
 #!/bin/bash
 set -e
 
-# Echo starting message
-echo -e "\e[1;32m=============================================\e[0m"
-echo -e "\e[1;32m🛠️ [INFO] Setting up simulation environment...\e[0m"
-echo -e "\e[1;32m=============================================\e[0m"
-
 # Set configuration file
 FILE_NAME="ubuntu22.04.yaml"
 export SETUP_DIR=$(realpath "$(dirname "$0")")
@@ -24,7 +19,3 @@ bash $SCRIPT_DIR/install_common.sh
 bash $SCRIPT_DIR/install_ros2.sh
 bash $SCRIPT_DIR/install_px4.sh
 
-# Echo ending message
-echo -e "\e[1;32m=============================================\e[0m"
-echo -e "\e[1;32m✅ [INFO] Setup complete! 🚀\e[0m"
-echo -e "\e[1;32m=============================================\e[0m"
