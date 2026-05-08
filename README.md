@@ -5,6 +5,9 @@
 conda create -n aion python=3.10
 conda activate aion
 
+cd ~
+git clone https://github.com/Zichen-Yan/AION.git
+cd ~/AION
 pip install -r requirements.txt
 pip install git+https://github.com/openai/CLIP.git
 ```
@@ -117,7 +120,7 @@ python main.py \
     --max_steps 4e6
 ```
 
-# 2. IsaacSim Evaluation Env (22.04 + ROS2 + ISAACSIM 5.1.0 + Pegasus)
+# 2. IsaacSim Evaluation Env (22.04 + Python 3.10 + ROS2 humble + ISAACSIM 5.1.0 + Pegasus)
 ## Download [ISAAC-SIM](https://docs.isaacsim.omniverse.nvidia.com/5.1.0/installation/quick-install.html) to 
 ~/.local/share/ov/pkg/isaac-sim-5.1.0
 ## Modify .bashrc
@@ -133,11 +136,12 @@ alias ISAACSIM="$ISAACSIM_PATH/isaac-sim.sh"
 cd ~
 git clone https://github.com/isaac-sim/IsaacSim-ros_workspaces.git
 
-cd DroneSim/
+cd ~/AION/DroneSim/
 bash install.sh
 ```
 ## Install Micro-XRCE-DDS
 ```bash
+cd ~
 git clone -b v2.4.3 https://github.com/eProsima/Micro-XRCE-DDS-Agent.git
 cd Micro-XRCE-DDS-Agent
 mkdir build
@@ -161,6 +165,7 @@ px4_dir: ~/PX4-Autopilot
 ```
 ## Compile px4msgs
 ```bash
+mkdir -p ~/px4msg_ws/src
 cd ~/px4msg_ws/src
 git clone https://github.com/PX4/px4_msgs.git
 cd ~/px4msg_ws
@@ -174,6 +179,7 @@ colcon build
 conda deactivate
 source ~/IsaacSim-ros_workspaces/build_ws/humble/humble_ws/install/setup.bash
 # start pegasus simulator in IsaacSim with PX4 SITL
+cd ~/AION
 export MDL_USER_PATH=DroneSim/Scenes/MTL
 ISAACSIM_PYTHON DroneSim/isaac_env.py
 ```
@@ -184,6 +190,6 @@ MicroXRCEAgent udp4 -p 8888
 ## 3.3 Terminal 3 Run Algorithm
 ```bash
 conda activate aion
-source ~/IsaacSim-ros_workspaces/build_ws/humble/humble_ws/install/setup.bash
+cd ~/AION
 python main_isaacsim.py
 ```
