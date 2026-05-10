@@ -389,7 +389,7 @@ def isaac_val(args, max_count, objcfg, nav_model, exp_model, dual_mode):
             if done:
                 if player.success:
                     success_flag = True
-                    print("Success!!!!!!!!!")
+                    print("Success!")
                 break
 
         save_file = os.path.join(player.save_dir, "step_log.json")

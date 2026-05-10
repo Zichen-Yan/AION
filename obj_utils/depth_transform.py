@@ -167,7 +167,7 @@ def map_pts_to_intervals(pts,
                          n_intervals=30,
                          default_value=3.0
                          ):
-    angle = np.arctan2(np.abs(pts[:, 2]), pts[:, 0])  # 计算每个点的角度，弧度
+    angle = np.arctan2(np.abs(pts[:, 2]), pts[:, 0])
     angle_boundaries = np.linspace(np.deg2rad(fov_deg[0] / 2), np.deg2rad(fov_deg[0] * 1.5), n_intervals + 1)
     angle_intervals, dist_intervals = [], []
     for i in range(n_intervals):

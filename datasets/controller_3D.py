@@ -289,9 +289,7 @@ class OfflineControllerWithSmallRotation(BaseController):
         )
 
         distance_y = abs(source_state.y - target_state.y)
-
         total_distance = distance_xz + distance_y
-
         estimated_steps = math.ceil(total_distance / 0.15)
         
         return None, estimated_steps

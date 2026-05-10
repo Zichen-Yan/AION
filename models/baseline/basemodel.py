@@ -57,8 +57,6 @@ class BaseModel(torch.nn.Module):
         self.lstm.bias_ih.data.fill_(0)
         self.lstm.bias_hh.data.fill_(0)
 
-        # self.action_predict_linear = nn.Linear(2 * lstm_input_sz, action_space)
-
         self.dropout = nn.Dropout(p=args.dropout_rate)
 
         self.objects = []

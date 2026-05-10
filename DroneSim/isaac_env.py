@@ -145,8 +145,6 @@ class PegasusApp:
         focal_length = horizontal_aperture / (2 * math.tan(math.radians(desired_fov_degrees) / 2.0))
         vertical_aperture = horizontal_aperture * (CAMERA_RESOLUTION[1] / CAMERA_RESOLUTION[0])
 
-        # Create the camera prim with all its properties (intrinsics) defined at creation.
-        # This is a more robust way to set these values than using the high-level Camera class alone.
         prim_utils.create_prim(
             prim_path=prim_path,
             prim_type="Camera",
@@ -154,11 +152,9 @@ class PegasusApp:
                 "focalLength": focal_length,
                 "horizontalAperture": horizontal_aperture,
                 "verticalAperture": vertical_aperture,
-                "clippingRange": (0.1, 1000.0),  # Near and far clipping planes
+                "clippingRange": (0.1, 1000.0),
             },
         )
-
-        # Now, apply the high-level Isaac Sim Camera API to this prim for easy control
         self.camera = Camera(
             prim_path=prim_path,
             resolution=CAMERA_RESOLUTION,

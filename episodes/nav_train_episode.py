@@ -67,11 +67,6 @@ class NavTrainEpisode(Episode):
         if action["action"] in movement_actions:
             self.move_steps += 1
 
-        horizon = round(self.environment.last_event.metadata['agent']['cameraHorizon'])
-        if horizon!=30:
-            print('horizon error!', horizon, 'action:', action, 'scene:', self.environment.controller.scene_name)
-            raise
-
         reward, terminal, action_was_successful = self.judge(action)
         if self.environment.controller.env_collapse == True:
             terminal = True
@@ -186,7 +181,6 @@ class NavTrainEpisode(Episode):
                 self._env.controller.move_relative(up=0.2)
                 break
             except (TimeoutError, Exception):
-                print("[WARN] Reset timeout at"+ scene)
                 self._env.controller.controller.stop()
                 del self._env.controller.controller
                 while True:

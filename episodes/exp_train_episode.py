@@ -96,7 +96,6 @@ class ExplorationTrainEpisode(Episode):
                 self._env.controller.move_relative(up=0.2)
                 break
             except (TimeoutError, Exception):
-                print("[WARN] Reset timeout")
                 self._env.controller.controller.stop()
                 del self._env.controller.controller
                 while True:
