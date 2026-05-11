@@ -3,8 +3,8 @@
 [![Visitors](https://komarev.com/ghpvc/?username=Zichen-Yan&repo=AION)](https://github.com/Zichen-Yan/AION)
 
 # 1. AI2THOR Training and Evaluation
+![img.png](figures/ai2thor.png)
 ## Prerequisite
-
 ```
 conda create -n aion python=3.10
 conda activate aion
@@ -125,8 +125,9 @@ python main.py \
 ```
 
 # 2. IsaacSim Evaluation Env (22.04 + Python 3.10 + ROS2 humble + ISAACSIM 5.1.0 + Pegasus)
+![img.png](figures/isaac.png)
 ## Download [ISAAC-SIM](https://docs.isaacsim.omniverse.nvidia.com/5.1.0/installation/quick-install.html) to 
-~/.local/share/ov/pkg/isaac-sim-5.1.0
+### ~/.local/share/ov/pkg/isaac-sim-5.1.0
 ## Modify .bashrc
 ```bash
 export ISAACSIM_PATH="${HOME}/.local/share/ov/pkg/isaac-sim-5.1.0/"
@@ -178,7 +179,6 @@ cd ~/px4msg_ws
 colcon build
 echo "source ~/px4msg_ws/install/setup.bash" >> ~/.bashrc
 ```
-
 # 3. Evaluation in ISAAC-SIM
 ## 3.1 Terminal 1 Start Simulator
 ```bash
@@ -199,4 +199,13 @@ MicroXRCEAgent udp4 -p 8888
 conda activate aion
 cd ~/AION
 python main_isaacsim.py
+```
+# 4. Citation
+```
+@article{yan2026aion,
+  title={AION: Aerial Indoor Object-Goal Navigation Using Dual-Policy Reinforcement Learning},
+  author={Yan, Zichen and Hou, Yuchen and Wang, Shenao and Gao, Yichao and Huang, Rui and Zhao, Lin},
+  journal={arXiv preprint arXiv:2601.15614},
+  year={2026}
+}
 ```
