@@ -1,6 +1,6 @@
 [![arXiv](https://img.shields.io/badge/arXiv-2310.07473-b31b1b.svg)](https://arxiv.org/pdf/2601.15614)
 [![YouTube](https://img.shields.io/badge/YouTube-video-FF0000?logo=youtube&logoColor=white)](https://youtu.be/TgsUm6bb7zg)
-[![Clicks](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FZichen-Yan%2FAION)](https://hits.seeyoufarm.com)
+[![Visitors](https://komarev.com/ghpvc/?username=Zichen-Yan&repo=AION)](https://github.com/Zichen-Yan/AION)
 
 # 1. AI2THOR Training and Evaluation
 ## Prerequisite
