@@ -137,7 +137,7 @@ alias ISAACSIM_PYTHON="$ISAACSIM_PATH/python.sh"
 alias ISAACSIM="$ISAACSIM_PATH/isaac-sim.sh"
 ```
 ## 2.3 ROS2 PX4 Prerequisite
-#### Change the ROS2 version in DroneSim/scripts/install_ros2.sh (ROS2_VERSION)
+#### Change the ROS2 name to your own version in DroneSim/scripts/install_ros2.sh (ROS2_VERSION) 
 ```bash
 cd ~
 git clone https://github.com/isaac-sim/IsaacSim-ros_workspaces.git
@@ -165,7 +165,7 @@ cd ~/PegasusSimulator/extensions
 ISAACSIM_PYTHON -m pip install -e pegasus.simulator/
 ```
 ## 2.6 Modify the PX4 path in
-### PegasusSimulator/extensions/pegasus.simulator/config/configs.yaml
+#### PegasusSimulator/extensions/pegasus.simulator/config/configs.yaml
 ```bash
 px4_dir: ~/PX4-Autopilot
 ```
