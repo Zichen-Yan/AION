@@ -1,7 +1,7 @@
 [![arXiv](https://img.shields.io/badge/arXiv-2310.07473-b31b1b.svg)](https://arxiv.org/pdf/2601.15614)
 [![YouTube](https://img.shields.io/badge/YouTube-video-FF0000?logo=youtube&logoColor=white)](https://youtu.be/TgsUm6bb7zg)
 
-# This project implements end2end 3D ObjectNav from AI2THOR training to Isaac-sim deployment on a realistic drone.
+## AION implements end2end 3D ObjectNav from AI2THOR training to Isaac-sim deployment on a realistic drone.
 
 # 1. AI2THOR Training and Evaluation
 ![img.png](figures/ai2thor.png)
