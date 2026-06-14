@@ -5,7 +5,7 @@
 
 # 1. AI2THOR Training and Evaluation
 ![img.png](figures/ai2thor.png)
-## Prerequisite
+## 1.1 Prerequisite
 ```
 conda create -n aion python=3.10
 conda activate aion
@@ -16,14 +16,14 @@ cd ~/AION
 pip install -r requirements.txt
 pip install git+https://github.com/openai/CLIP.git
 ```
-## Data
+## 1.2 Data
 The data file can be found [here](https://drive.google.com/file/d/1TdiPQuChbyrh9JzIoBvRGpuknzoWLXFg/view?usp=drive_link).
 
 The ckpt can be found [here](https://drive.google.com/file/d/1a_Dk09y2GhtZvlXo3c4TjSxf_WI-SdwS/view?usp=drive_link). 
 
 data/ and ckpt/ should be put in the root dir.
 
-## Train Goal-Reaching 
+## 1.3 Train Goal-Reaching 
 ### AIONg 
 #### split = [14/8, 18/4]
 ```bash
@@ -67,7 +67,7 @@ python main.py \
     --add_stats True
 ```
 
-## Evaluate Goal-Reaching
+## 1.4 Evaluate Goal-Reaching
 ### AIONg
 #### get_seen_data = [False, True]
 ```bash
@@ -105,7 +105,7 @@ python main.py \
     --save_episode_data True
 ```
 
-## Train Exploration
+## 1.5 Train Exploration
 ### AIONe
 ```bash
 python main.py \
@@ -127,16 +127,16 @@ python main.py \
 
 # 2. IsaacSim Evaluation Env (22.04 + Python 3.10 + ROS2 humble + ISAACSIM 5.1.0 + Pegasus)
 ![img.png](figures/isaac.png)
-## Download [ISAAC-SIM](https://docs.isaacsim.omniverse.nvidia.com/5.1.0/installation/quick-install.html) to 
+## 2.1 Download [ISAAC-SIM](https://docs.isaacsim.omniverse.nvidia.com/5.1.0/installation/quick-install.html) to 
 ### ~/.local/share/ov/pkg/isaac-sim-5.1.0
-## Modify .bashrc
+## 2.2 Modify .bashrc
 ```bash
 export ISAACSIM_PATH="${HOME}/.local/share/ov/pkg/isaac-sim-5.1.0/"
 export ISAACSIM_PYTHON_EXE="${ISAACSIM_PATH}/python.sh"
 alias ISAACSIM_PYTHON="$ISAACSIM_PATH/python.sh"
 alias ISAACSIM="$ISAACSIM_PATH/isaac-sim.sh"
 ```
-## ROS2 PX4 Prerequisite
+## 2.3 ROS2 PX4 Prerequisite
 #### Change the ROS2 version in DroneSim/scripts/install_ros2.sh (ROS2_VERSION)
 ```bash
 cd ~
@@ -145,7 +145,7 @@ git clone https://github.com/isaac-sim/IsaacSim-ros_workspaces.git
 cd ~/AION/DroneSim/
 bash install.sh
 ```
-## Install Micro-XRCE-DDS
+## 2.4 Install Micro-XRCE-DDS
 ```bash
 cd ~
 git clone https://github.com/eProsima/Micro-XRCE-DDS-Agent.git
@@ -157,19 +157,19 @@ make
 sudo make install
 sudo ldconfig /usr/local/lib/
 ```
-## Install Pegasus Simulator
+## 2.5 Install Pegasus Simulator
 ```bash
 cd ~
 git clone https://github.com/PegasusSimulator/PegasusSimulator.git
 cd ~/PegasusSimulator/extensions
 ISAACSIM_PYTHON -m pip install -e pegasus.simulator/
 ```
-## Modify the PX4 path in
+## 2.6 Modify the PX4 path in
 ### PegasusSimulator/extensions/pegasus.simulator/config/configs.yaml
 ```bash
 px4_dir: ~/PX4-Autopilot
 ```
-## Compile px4msgs
+## 2.7 Compile px4msgs
 ```bash
 sudo apt install python3-empy python3-colcon-common-extensions
 
