@@ -126,11 +126,11 @@ python main.py \
 ```
 
 # 2. IsaacSim Evaluation Env (22.04 + Python 3.10 + ROS2 humble + ISAACSIM 5.1.0 + Pegasus)
-![Ubuntu](https://img.shields.io/badge/Ubuntu-22.04-E95420)
-![Python](https://img.shields.io/badge/Python-3.10-3776AB)
-![ROS2](https://img.shields.io/badge/ROS2-Humble-22314E)
-![IsaacSim](https://img.shields.io/badge/Isaac%20Sim-5.1.0-76B900)
-![Pegasus](https://img.shields.io/badge/Pegasus-enabled-blue)
+[![Ubuntu](https://img.shields.io/badge/Ubuntu-22.04-E95420)](https://ubuntu.com/)
+[![Python](https://img.shields.io/badge/Python-3.10-3776AB)](https://www.python.org/)
+[![ROS2](https://img.shields.io/badge/ROS2-Humble-22314E)](https://docs.ros.org/en/humble/)
+[![IsaacSim](https://img.shields.io/badge/Isaac%20Sim-5.1.0-76B900)](https://developer.nvidia.com/isaac/sim)
+[![Pegasus](https://img.shields.io/badge/Pegasus-enabled-blue)](https://github.com/PegasusSimulator/PegasusSimulator)
 
 ![img.png](figures/isaac.png)
 ## 2.1 Download [ISAAC-SIM](https://docs.isaacsim.omniverse.nvidia.com/5.1.0/installation/quick-install.html) to 
