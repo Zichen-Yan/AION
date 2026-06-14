@@ -125,7 +125,7 @@ python main.py \
     --max_steps 4e6
 ```
 
-# 2. IsaacSim Evaluation Env
+# 2. IsaacSim Env Installation
 [![Ubuntu](https://img.shields.io/badge/Ubuntu-22.04-E95420)](https://ubuntu.com/)
 [![Python](https://img.shields.io/badge/Python-3.10-3776AB)](https://www.python.org/)
 [![ROS2](https://img.shields.io/badge/ROS2-Humble-22314E)](https://docs.ros.org/en/humble/)
