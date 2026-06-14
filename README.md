@@ -3,7 +3,7 @@
 
 ## AION implements end2end 3D ObjectNav from AI2THOR training to Isaac-sim deployment on a realistic drone.
 
-# 1. AI2THOR Training and Evaluation
+# 1. Training and Evaluation in AI2THOR 
 ![img.png](figures/ai2thor.png)
 ## 1.1 Prerequisite
 ```
