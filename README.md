@@ -16,14 +16,14 @@ cd ~/AION
 pip install -r requirements.txt
 pip install git+https://github.com/openai/CLIP.git
 ```
-## 1.2 Data
+## 1.2 Data Preparation
 The [data/](https://drive.google.com/file/d/1TdiPQuChbyrh9JzIoBvRGpuknzoWLXFg/view?usp=drive_link) and [ckpt/](https://drive.google.com/file/d/1a_Dk09y2GhtZvlXo3c4TjSxf_WI-SdwS/view?usp=drive_link) 
 dirs should be put in the root.
 
 The [IsaacSimAssets/](https://drive.google.com/file/d/1pSPtM-zyJQVePGHsuWaqhnbXPOmrfEyr/view?usp=drive_link) and 
 [Scenes/](https://drive.google.com/file/d/1zsqSrWUbcPsBzIngnzc_AkfnI-mn4vvF/view?usp=drive_link) dirs should be put in DroneSim/.
 
-## 1.3 Train Goal-Reaching 
+## 1.3 Train Goal-Reaching Policy
 ### AIONg 
 #### split = [14/8, 18/4]
 ```bash
@@ -67,7 +67,7 @@ python main.py \
     --add_stats True
 ```
 
-## 1.4 Evaluate Goal-Reaching
+## 1.4 Evaluate Goal-Reaching Policy
 ### AIONg
 #### get_seen_data = [False, True]
 ```bash
@@ -105,7 +105,7 @@ python main.py \
     --save_episode_data True
 ```
 
-## 1.5 Train Exploration
+## 1.5 Train Exploration Policy
 ### AIONe
 ```bash
 python main.py \
