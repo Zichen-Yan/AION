@@ -17,10 +17,9 @@ pip install -r requirements.txt
 pip install git+https://github.com/openai/CLIP.git
 ```
 ## 1.2 Data Preparation
-The [data/](https://drive.google.com/file/d/1TdiPQuChbyrh9JzIoBvRGpuknzoWLXFg/view?usp=drive_link) and [ckpt/](https://drive.google.com/file/d/11wsKMmOEMSC5MrnzR1iu478kxHQXAHLA/view?usp=sharing) 
-dirs should be put in the root.
+The training data dir [data/](https://drive.google.com/file/d/1TdiPQuChbyrh9JzIoBvRGpuknzoWLXFg/view?usp=drive_link) and model checkpoint dir [ckpt/](https://drive.google.com/file/d/11wsKMmOEMSC5MrnzR1iu478kxHQXAHLA/view?usp=sharing) should be put in the root.
 The [IsaacSimAssets/](https://drive.google.com/file/d/1pSPtM-zyJQVePGHsuWaqhnbXPOmrfEyr/view?usp=drive_link) and 
-[Scenes/](https://drive.google.com/file/d/1zsqSrWUbcPsBzIngnzc_AkfnI-mn4vvF/view?usp=drive_link) dirs should be put in DroneSim/.
+[Scenes/](https://drive.google.com/file/d/1zsqSrWUbcPsBzIngnzc_AkfnI-mn4vvF/view?usp=drive_link) dirs should be put in DroneSim/ for Isaac-sim evaluation.
 
 ## 1.3 Train Goal-Reaching Policy
 ### AIONg 
