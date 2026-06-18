@@ -67,7 +67,14 @@ python main.py \
 
 ## 1.4 Evaluate Goal-Reaching Policy
 ### AIONg
-#### get_seen_data = [False, True]
+
+| Argument | Description                                                                 |
+|---|-----------------------------------------------------------------------------|
+| `get_seen_data` | Use seen training data when `true`; use unseen validation data when `false` |
+| `vis` | Show the simulator UI; disable for headless evaluation                      |
+| `save_visuals` | Save episode logs                                                           |
+| `save_episode_data` | Save videos                                                                 |
+
 ```bash
 python main.py \
     --eval \
@@ -141,7 +148,7 @@ alias ISAACSIM_PYTHON="$ISAACSIM_PATH/python.sh"
 alias ISAACSIM="$ISAACSIM_PATH/isaac-sim.sh"
 ```
 ## 2.3 ROS2 PX4 Prerequisite
-#### Change the ROS2 name to your own version in DroneSim/scripts/install_ros2.sh (ROS2_VERSION, default="humble") 
+#### Change the ROS2 name to your own version in DroneSim/scripts/install_ros2.sh (ROS2_VERSION, default="humble")
 ```bash
 cd ~
 git clone https://github.com/isaac-sim/IsaacSim-ros_workspaces.git
