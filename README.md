@@ -72,8 +72,8 @@ python main.py \
 |---|-----------------------------------------------------------------------------|
 | `get_seen_data` | Use seen training data when `true`; use unseen validation data when `false` |
 | `vis` | Show the simulator UI; disable for headless evaluation                      |
-| `save_visuals` | Save episode logs                                                           |
-| `save_episode_data` | Save videos                                                                 |
+| `save_visuals` | Save videos                                                           |
+| `save_episode_data` | Save episode logs                                                                |
 
 ```bash
 python main.py \
