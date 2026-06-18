@@ -142,7 +142,7 @@ alias ISAACSIM_PYTHON="$ISAACSIM_PATH/python.sh"
 alias ISAACSIM="$ISAACSIM_PATH/isaac-sim.sh"
 ```
 ## 2.3 ROS2 PX4 Prerequisite
-#### Change the ROS2 name to your own version in DroneSim/scripts/install_ros2.sh (ROS2_VERSION, default is "humble") 
+#### Change the ROS2 name to your own version in DroneSim/scripts/install_ros2.sh (ROS2_VERSION, default="humble") 
 ```bash
 cd ~
 git clone https://github.com/isaac-sim/IsaacSim-ros_workspaces.git
@@ -201,7 +201,7 @@ ISAACSIM_PYTHON DroneSim/isaac_env.py
 MicroXRCEAgent udp4 -p 8888
 ```
 ## 3.3 Terminal 3 Run Algorithm 
-### "vis_results" are saved in DroneSim/
+#### "vis_results" are saved in DroneSim/
 ```bash
 conda activate aion
 cd ~/AION
