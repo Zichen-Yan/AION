@@ -17,7 +17,7 @@ pip install -r requirements.txt
 pip install git+https://github.com/openai/CLIP.git
 ```
 ## 1.2 Data Preparation
-The [data/](https://drive.google.com/file/d/1TdiPQuChbyrh9JzIoBvRGpuknzoWLXFg/view?usp=drive_link) and [ckpt/](https://drive.google.com/file/d/1a_Dk09y2GhtZvlXo3c4TjSxf_WI-SdwS/view?usp=drive_link) 
+The [data/](https://drive.google.com/file/d/1TdiPQuChbyrh9JzIoBvRGpuknzoWLXFg/view?usp=drive_link) and [ckpt/](https://drive.google.com/file/d/11wsKMmOEMSC5MrnzR1iu478kxHQXAHLA/view?usp=sharing) 
 dirs should be put in the root.
 
 The [IsaacSimAssets/](https://drive.google.com/file/d/1pSPtM-zyJQVePGHsuWaqhnbXPOmrfEyr/view?usp=drive_link) and 
@@ -201,7 +201,8 @@ ISAACSIM_PYTHON DroneSim/isaac_env.py
 ```bash
 MicroXRCEAgent udp4 -p 8888
 ```
-## 3.3 Terminal 3 Run Algorithm
+## 3.3 Terminal 3 Run Algorithm 
+### "vis_results" are saved in DroneSim/
 ```bash
 conda activate aion
 cd ~/AION
