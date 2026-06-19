@@ -73,7 +73,7 @@ class PegasusApp:
         env_prim = stage.GetPrimAtPath("/World/layout")
 
         xform = UsdGeom.Xformable(env_prim)
-        xform.AddScaleOp().Set((1.5, 1.5, 1.5))  # shrink scene by 50%
+        xform.AddScaleOp().Set((1.5, 1.5, 1.5))  # enlarge scene by 50%
         simulation_app.update()
 
         # Configure and spawn the drone
