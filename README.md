@@ -19,6 +19,7 @@ pip install git+https://github.com/openai/CLIP.git
 ## 1.2 Data Preparation
 The data/ dir and ckpt/ dir should be put in the root.
 ```bash
+cd ~/AION
 hf download ZichenYan/AION --local-dir ./ --include "ckpt/*"
 hf download ZichenYan/AION-dataset-files --repo-type dataset --include "data.zip" --local-dir ./
 unzip data.zip
