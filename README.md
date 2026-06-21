@@ -199,7 +199,8 @@ cd ~/px4msg_ws
 colcon build
 echo "source ~/px4msg_ws/install/setup.bash" >> ~/.bashrc
 ```
-# 3. Evaluation in ISAAC-SIM
+# 3. Evaluation in IsaacSim
+### Make sure the `env_idx` values in `isaac_env.py` and `main_isaacsim.py` are identical.
 ## 3.1 Terminal 1 Start Simulator
 ```bash
 # start pegasus simulator in IsaacSim with PX4 SITL
@@ -214,8 +215,13 @@ ISAACSIM_PYTHON DroneSim/isaac_env.py
 ```bash
 MicroXRCEAgent udp4 -p 8888
 ```
-## 3.3 Terminal 3 Run Algorithm 
-#### "vis_results" are saved in DroneSim/
+## 3.3 Terminal 3 Run Algorithm
+| Arguments in main_isaacsim.py | Description                                  |
+|-------------------------------|----------------------------------------------|
+| `env_idx`                     | Choose scenario                              |
+| `dual_mode`                   | 0: both, 1: explore only, 2: goal-reach only |
+| `obj_name`                    | Target object                                |
+| `DroneSim/vis_results`        | Results dir                                  |
 ```bash
 conda activate aion
 cd ~/AION
